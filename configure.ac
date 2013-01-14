@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.59])
 AC_INIT([OPM Core Library], [0.1], [atgeirr@sintef.no],
-        [opmcore], [https://public.ict.sintef.no/opm/hg/opmcore])
+        [opmcore], [https://github.com/OPM/opm-core])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
