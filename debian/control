@@ -1,0 +1,41 @@
+Source: libopmcore
+Priority: extra
+Maintainer: Arne Morten Kvarving <arne.morten.kvarving@sintef.no>
+Build-Depends: build-essential, debhelper (>= 8.0.0), libboost-filesystem-dev, libboost-system-dev, libboost-date-time-dev, libboost-test-dev, libsuperlu3-dev, gfortran, libsuitesparse-dev, autotools-dev, automake, libtool, libdune-common-dev, libdune-istl-dev
+Standards-Version: 3.9.2
+Section: libs
+Homepage: http://opm-project.org
+Vcs-Git: git://github.com/OPM/opm-core.git
+Vcs-Browser: https://github.com/OPM/opm-core
+
+Package: libopmcore-dev
+Section: libdevel
+Architecture: any
+Depends: libopmcore1 (= ${binary:Version})
+Description: OMP core library -- development files
+ The OPM core library is the core library within OPM and contains
+ * Eclipse deck input and preprosessing
+ * Fluid properties (basic PVT models and rock properties)
+ * Grid handling (cornerpoint grids, unstructured grid interface)
+ * Linear Algebra (interface to different linear solvers)
+ * Pressure solvers (various discretization schemes, flow models)
+ * Simulators (some basic examples of simulators based on sequential splitting schemes)
+ * Transport solvers (various discretization schemes, flow models)
+ * Utilities (input and output processing, unit conversion)
+ * Wells (basic well handling)
+
+Package: libopmcore1
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: OMP core library
+ The OPM core library is the core library within OPM and contains
+ * Eclipse deck input and preprosessing
+ * Fluid properties (basic PVT models and rock properties)
+ * Grid handling (cornerpoint grids, unstructured grid interface)
+ * Linear Algebra (interface to different linear solvers)
+ * Pressure solvers (various discretization schemes, flow models)
+ * Simulators (some basic examples of simulators based on sequential splitting schemes)
+ * Transport solvers (various discretization schemes, flow models)
+ * Utilities (input and output processing, unit conversion)
+ * Wells (basic well handling)
