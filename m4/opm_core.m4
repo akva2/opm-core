@@ -51,6 +51,15 @@ AC_SEARCH_LIBS([cholmod_l_start],      [cholmod])
 AC_SEARCH_LIBS([umfpack_dl_solve],     [umfpack],dnl
                [umfpack_lib=yes],      [umfpack_lib=no])
 
+# TinyXML
+AC_CHECK_LIB([tinyxml],     [main],, tixml_lib=no)
+AM_CONDITIONAL([INTERNAL_TIXML], [test x"$tixml_lib" = x"no"])
+
+# Doesn't use AM_COND_IF since this is required
+if test x"$tixml_lib" = x"no"; then
+  CPPFLAGS="$CPPFLAGS -Iopm/core/utilities/parameters/tinyxml"
+fi
+
 AM_CONDITIONAL([UMFPACK],
   [test "x$umfpack_header" != "xno" -a "x$umfpack_lib" != "xno"])
 

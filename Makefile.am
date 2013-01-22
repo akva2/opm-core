@@ -130,10 +130,6 @@ opm/core/utility/parameters/Parameter.cpp		\
 opm/core/utility/parameters/ParameterGroup.cpp		\
 opm/core/utility/parameters/ParameterTools.cpp		\
 opm/core/utility/parameters/ParameterXML.cpp		\
-opm/core/utility/parameters/tinyxml/tinystr.cpp		\
-opm/core/utility/parameters/tinyxml/tinyxml.cpp		\
-opm/core/utility/parameters/tinyxml/tinyxmlerror.cpp	\
-opm/core/utility/parameters/tinyxml/tinyxmlparser.cpp	\
 opm/core/utility/writeECLData.cpp			\
 opm/core/utility/writeVtkData.cpp			\
 opm/core/vag_format/vag.cpp				\
@@ -142,6 +138,13 @@ opm/core/wells/ProductionSpecification.cpp		\
 opm/core/wells/WellCollection.cpp			\
 opm/core/wells/WellsGroup.cpp				\
 opm/core/wells/WellsManager.cpp
+
+if INTERNAL_TIXML
+lib_libopmcore_la_SOURCES += opm/core/utility/parameters/tinyxml/tinystr.cpp		\
+			     opm/core/utility/parameters/tinyxml/tinyxml.cpp		\
+			     opm/core/utility/parameters/tinyxml/tinyxmlerror.cpp	\
+			     opm/core/utility/parameters/tinyxml/tinyxmlparser.cpp
+endif
 
 nobase_include_HEADERS =				\
 opm/core/GridAdapter.hpp				\
