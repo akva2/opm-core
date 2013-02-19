@@ -74,7 +74,7 @@ macro (opm_compile_satellites opm satellite excl_all test_regexp)
 	  add_test (${_sat_FANCY} ${_sat_LOC})
 	  # run the test in the directory where the data files are
 	  set_tests_properties (${_sat_FANCY} PROPERTIES
-		WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${satellite}_DIR}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/${${satellite}_DIR}
 		)
 	endif(NOT ${test_regexp} STREQUAL "")
   endforeach (_sat_FILE)
