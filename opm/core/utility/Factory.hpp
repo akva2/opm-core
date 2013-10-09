@@ -86,9 +86,9 @@ namespace Opm
         /// \param type the type string with which we want the Factory to associate
         ///             the class Derived.
         template<class Derived>
-        static void addCreator(const std::string& type)
+        static void addCreator(const std::string& type, bool replace=true)
         {
-            instance().template doAddCreator<Derived>(type);
+            instance().template doAddCreator<Derived>(type, replace);
         }
 
     private:
@@ -162,10 +162,14 @@ namespace Opm
 
         // Actually adds the creator.
         template<class Derived>
-        void doAddCreator(const std::string& type)
+        void doAddCreator(const std::string& type, bool replace)
         {
+          typename CreatorMap::iterator it;
+          it = string_to_creator_.find(type);
+          if(replace || it == string_to_creator_.end()) {
             CreatorPtr c(new ConcreteCreator<Derived>);
             string_to_creator_[type] = c;
+          }
         }
     };
 

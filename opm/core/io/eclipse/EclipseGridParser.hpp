@@ -159,7 +159,7 @@ namespace Opm
     // After using SPECIAL_FIELD(KEYWORD), the public member getKEYWORD will be available.
 #define SPECIAL_FIELD(keyword)                                                                   \
 private:                                                                                         \
-    struct X##keyword { X##keyword() { Factory<SpecialBase>::addCreator<keyword>(#keyword); } }; \
+    struct X##keyword { X##keyword() { Factory<SpecialBase>::addCreator<keyword>(#keyword, false); } }; \
     X##keyword x##keyword;                                                                       \
 public:                                                                                          \
     const keyword& get##keyword() const                                                          \
