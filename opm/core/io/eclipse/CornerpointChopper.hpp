@@ -66,14 +66,6 @@ namespace Opm
 
 
 
-        const int* newDimensions() const
-        {
-            return new_dims_;
-        }
-
-
-
-
         const std::pair<double, double> zLimits() const
         {
             return std::make_pair(botmax_, topmin_);
@@ -127,10 +119,24 @@ namespace Opm
             }
         }
 
-        void chop(int imin, int imax, int jmin, int jmax, double zmin, double zmax, bool resettoorigin=true)
+        typedef struct {
+          std::vector<double> new_COORD_;
+          std::vector<double> new_ZCORN_;
+          std::vector<int> new_ACTNUM_;
+          std::vector<double> new_PORO_;
+          std::vector<double> new_PERMX_;
+          std::vector<double> new_PERMY_;
+          std::vector<double> new_PERMZ_;
+          std::vector<double> new_NTG_;
+          std::vector<int> new_SATNUM_;
+          int new_dims_[3];
+          std::vector<int> new_to_old_cell_;
+        } ChopContext;
+
+        void chop(int imin, int imax, int jmin, int jmax, double zmin, double zmax, ChopContext& result, bool resettoorigin=true)
         {
-            new_dims_[0] = imax - imin;
-            new_dims_[1] = jmax - jmin;
+            result.new_dims_[0] = imax - imin;
+            result.new_dims_[1] = jmax - jmin;
 
             // Filter the coord field
             const std::vector<double>& COORD = parser_.getFloatingPointValue("COORD");
@@ -139,24 +145,24 @@ namespace Opm
                 std::cerr << "Error! COORD size (" << COORD.size() << ") not consistent with SPECGRID\n";
                 throw std::runtime_error("Inconsistent COORD and SPECGRID.");
             }
-            int num_new_coord = 6*(new_dims_[0] + 1)*(new_dims_[1] + 1);
+            int num_new_coord = 6*(result.new_dims_[0] + 1)*(result.new_dims_[1] + 1);
             double x_correction = COORD[6*((dims_[0] + 1)*jmin + imin)];
             double y_correction = COORD[6*((dims_[0] + 1)*jmin + imin) + 1];
-            new_COORD_.resize(num_new_coord, 1e100);
+            result.new_COORD_.resize(num_new_coord, 1e100);
             for (int j = jmin; j < jmax + 1; ++j) {
                 for (int i = imin; i < imax + 1; ++i) {
                     int pos = (dims_[0] + 1)*j + i;
-                    int new_pos = (new_dims_[0] + 1)*(j-jmin) + (i-imin);
+                    int new_pos = (result.new_dims_[0] + 1)*(j-jmin) + (i-imin);
                     // Copy all 6 coordinates for a pillar.
-                    std::copy(COORD.begin() + 6*pos, COORD.begin() + 6*(pos + 1), new_COORD_.begin() + 6*new_pos);
+                    std::copy(COORD.begin() + 6*pos, COORD.begin() + 6*(pos + 1), result.new_COORD_.begin() + 6*new_pos);
                     if (resettoorigin) {
                         // Substract lowest x value from all X-coords, similarly for y, and truncate in z-direction
-                      new_COORD_[6*new_pos]     -= x_correction;
-                      new_COORD_[6*new_pos + 1] -= y_correction;
-                      new_COORD_[6*new_pos + 2]  = 0;
-                      new_COORD_[6*new_pos + 3] -= x_correction;
-                      new_COORD_[6*new_pos + 4] -= y_correction;
-                      new_COORD_[6*new_pos + 5]  = zmax-zmin;
+                      result.new_COORD_[6*new_pos]     -= x_correction;
+                      result.new_COORD_[6*new_pos + 1] -= y_correction;
+                      result.new_COORD_[6*new_pos + 2]  = 0;
+                      result.new_COORD_[6*new_pos + 3] -= x_correction;
+                      result.new_COORD_[6*new_pos + 4] -= y_correction;
+                      result.new_COORD_[6*new_pos + 5]  = zmax-zmin;
                     }
                 }
             }
@@ -200,22 +206,22 @@ namespace Opm
                     break;
                 }
             }
-            new_dims_[2] = kmax - kmin;
+            result.new_dims_[2] = kmax - kmin;
 
             // Filter the ZCORN field, build mapping from new to old cells.
             double z_origin_correction = 0.0;
             if (resettoorigin) {
                 z_origin_correction = zmin;
             }
-            new_ZCORN_.resize(8*new_dims_[0]*new_dims_[1]*new_dims_[2], 1e100);
-            new_to_old_cell_.resize(new_dims_[0]*new_dims_[1]*new_dims_[2], -1);
+            result.new_ZCORN_.resize(8*result.new_dims_[0]*result.new_dims_[1]*result.new_dims_[2], 1e100);
+            result.new_to_old_cell_.resize(result.new_dims_[0]*result.new_dims_[1]*result.new_dims_[2], -1);
             int cellcount = 0;
             int delta[3] = { 1, 2*dims_[0], 4*dims_[0]*dims_[1] };
-            int new_delta[3] = { 1, 2*new_dims_[0], 4*new_dims_[0]*new_dims_[1] };
+            int new_delta[3] = { 1, 2*result.new_dims_[0], 4*result.new_dims_[0]*result.new_dims_[1] };
             for (int k = kmin; k < kmax; ++k) {
                 for (int j = jmin; j < jmax; ++j) {
                     for (int i = imin; i < imax; ++i) {
-                        new_to_old_cell_[cellcount++] = dims_[0]*dims_[1]*k + dims_[0]*j + i;
+                        result.new_to_old_cell_[cellcount++] = dims_[0]*dims_[1]*k + dims_[0]*j + i;
                         int old_ix = 2*(i*delta[0] + j*delta[1] + k*delta[2]);
                         int new_ix = 2*((i-imin)*new_delta[0] + (j-jmin)*new_delta[1] + (k-kmin)*new_delta[2]);
                         int old_indices[8] = { old_ix, old_ix + delta[0],
@@ -227,19 +233,19 @@ namespace Opm
                                                new_ix + new_delta[2], new_ix + new_delta[2] + new_delta[0],
                                                new_ix + new_delta[2] + new_delta[1], new_ix + new_delta[2] + new_delta[1] + new_delta[0] };
                         for (int cc = 0; cc < 8; ++cc) {
-                            new_ZCORN_[new_indices[cc]] = std::min(zmax, std::max(zmin, ZCORN[old_indices[cc]])) - z_origin_correction;
+                            result.new_ZCORN_[new_indices[cc]] = std::min(zmax, std::max(zmin, ZCORN[old_indices[cc]])) - z_origin_correction;
                         }
                     }
                 }
             }
 
-            filterIntegerField("ACTNUM", new_ACTNUM_);
-            filterDoubleField("PORO", new_PORO_);
-            filterDoubleField("NTG", new_NTG_);
-            filterDoubleField("PERMX", new_PERMX_);
-            filterDoubleField("PERMY", new_PERMY_);
-            filterDoubleField("PERMZ", new_PERMZ_);
-            filterIntegerField("SATNUM", new_SATNUM_);
+            filterIntegerField("ACTNUM", result, result.new_ACTNUM_);
+            filterDoubleField("PORO", result, result.new_PORO_);
+            filterDoubleField("NTG", result, result.new_NTG_);
+            filterDoubleField("PERMX", result, result.new_PERMX_);
+            filterDoubleField("PERMY", result, result.new_PERMY_);
+            filterDoubleField("PERMZ", result, result.new_PERMZ_);
+            filterIntegerField("SATNUM", result, result.new_SATNUM_);
         }
 
 
@@ -247,7 +253,7 @@ namespace Opm
         /// Return a subparser with fields corresponding to the selected subset.
         /// Note that the returned parser is NOT converted to SI, that must be done
         /// by the user afterwards with the parser's convertToSI() method.
-        EclipseGridParser subparser()
+        EclipseGridParser subparser(const ChopContext& context)
         {
             if (parser_.hasField("FIELD") || parser_.hasField("LAB") || parser_.hasField("PVT-M")) {
                 OPM_THROW(std::runtime_error, "CornerPointChopper::subparser() cannot handle any eclipse unit system other than METRIC.");
@@ -256,18 +262,18 @@ namespace Opm
             EclipseGridParser sp;
             std::shared_ptr<SPECGRID> sg(new SPECGRID);
             for (int dd = 0; dd < 3; ++dd) {
-                sg->dimensions[dd] = new_dims_[dd];
+                sg->dimensions[dd] = context.new_dims_[dd];
             }
             sp.setSpecialField("SPECGRID", sg);
-            sp.setFloatingPointField("COORD", new_COORD_);
-            sp.setFloatingPointField("ZCORN", new_ZCORN_);
-            if (!new_ACTNUM_.empty()) sp.setIntegerField("ACTNUM", new_ACTNUM_);
-            if (!new_PORO_.empty()) sp.setFloatingPointField("PORO", new_PORO_);
-            if (!new_NTG_.empty()) sp.setFloatingPointField("NTG", new_NTG_);
-            if (!new_PERMX_.empty()) sp.setFloatingPointField("PERMX", new_PERMX_);
-            if (!new_PERMY_.empty()) sp.setFloatingPointField("PERMY", new_PERMY_);
-            if (!new_PERMZ_.empty()) sp.setFloatingPointField("PERMZ", new_PERMZ_);
-            if (!new_SATNUM_.empty()) sp.setIntegerField("SATNUM", new_SATNUM_);
+            sp.setFloatingPointField("COORD", context.new_COORD_);
+            sp.setFloatingPointField("ZCORN", context.new_ZCORN_);
+            if (!context.new_ACTNUM_.empty()) sp.setIntegerField("ACTNUM", context.new_ACTNUM_);
+            if (!context.new_PORO_.empty()) sp.setFloatingPointField("PORO", context.new_PORO_);
+            if (!context.new_NTG_.empty()) sp.setFloatingPointField("NTG", context.new_NTG_);
+            if (!context.new_PERMX_.empty()) sp.setFloatingPointField("PERMX", context.new_PERMX_);
+            if (!context.new_PERMY_.empty()) sp.setFloatingPointField("PERMY", context.new_PERMY_);
+            if (!context.new_PERMZ_.empty()) sp.setFloatingPointField("PERMZ", context.new_PERMZ_);
+            if (!context.new_SATNUM_.empty()) sp.setIntegerField("SATNUM", context.new_SATNUM_);
             sp.computeUnits(); // Always METRIC, since that is default.
             return sp;
         }
@@ -275,7 +281,7 @@ namespace Opm
 
 
 
-        void writeGrdecl(const std::string& filename)
+        void writeGrdecl(const std::string& filename, const ChopContext& context)
         {
             // Output new versions of SPECGRID, COORD, ZCORN, ACTNUM, PERMX, PORO, SATNUM.
             std::ofstream out(filename.c_str());
@@ -283,20 +289,19 @@ namespace Opm
                 std::cerr << "Could not open file " << filename << "\n";
                 throw std::runtime_error("Could not open output file.");
             }
-            out << "SPECGRID\n" << new_dims_[0] << ' ' << new_dims_[1] << ' ' << new_dims_[2]
+            out << "SPECGRID\n" << context.new_dims_[0] << ' ' << context.new_dims_[1] << ' ' << context.new_dims_[2]
                 << " 1 F\n/\n\n";
 
-            outputField(out, new_COORD_, "COORD", /* nl = */ 6);
-            outputField(out, new_ZCORN_, "ZCORN", /* nl = */ 8);
-            outputField(out, new_ACTNUM_, "ACTNUM");
-            outputField(out, new_PORO_, "PORO");
-            if (hasNTG()) {outputField(out, new_NTG_, "NTG");}
-            outputField(out, new_PERMX_, "PERMX");
-            outputField(out, new_PERMY_, "PERMY");
-            outputField(out, new_PERMZ_, "PERMZ");
-            outputField(out, new_SATNUM_, "SATNUM");
+            outputField(out, context.new_COORD_, "COORD", /* nl = */ 6);
+            outputField(out, context.new_ZCORN_, "ZCORN", /* nl = */ 8);
+            outputField(out, context.new_ACTNUM_, "ACTNUM");
+            outputField(out, context.new_PORO_, "PORO");
+            if (!context.new_NTG_.empty()) {outputField(out, context.new_NTG_, "NTG");}
+            outputField(out, context.new_PERMX_, "PERMX");
+            outputField(out, context.new_PERMY_, "PERMY");
+            outputField(out, context.new_PERMZ_, "PERMZ");
+            outputField(out, context.new_SATNUM_, "SATNUM");
         }
-        bool hasNTG() const {return !new_NTG_.empty(); }
 
     private:
         EclipseGridParser parser_;
@@ -304,18 +309,7 @@ namespace Opm
         double topmin_;
         double abszmin_;
         double abszmax_;
-        std::vector<double> new_COORD_;
-        std::vector<double> new_ZCORN_;
-        std::vector<int> new_ACTNUM_;
-        std::vector<double> new_PORO_;
-        std::vector<double> new_NTG_;
-        std::vector<double> new_PERMX_;
-        std::vector<double> new_PERMY_;
-        std::vector<double> new_PERMZ_;
-        std::vector<int> new_SATNUM_;
         int dims_[3];
-        int new_dims_[3];
-        std::vector<int> new_to_old_cell_;
 
 
         template <typename T>
@@ -345,28 +339,33 @@ namespace Opm
 
         template <typename T>
         void filterField(const std::vector<T>& field,
-                                std::vector<T>& output_field)
+                         const ChopContext& context,
+                         std::vector<T>& output_field)
         {
-            int sz = new_to_old_cell_.size();
+            int sz = context.new_to_old_cell_.size();
             output_field.resize(sz);
             for (int i = 0; i < sz; ++i) {
-                output_field[i] = field[new_to_old_cell_[i]];
+                output_field[i] = field[context.new_to_old_cell_[i]];
             }
         }
 
-        void filterDoubleField(const std::string& keyword, std::vector<double>& output_field)
+        void filterDoubleField(const std::string& keyword,
+                               const ChopContext& context,
+                               std::vector<double>& output_field)
         {
             if (parser_.hasField(keyword)) {
                 const std::vector<double>& field = parser_.getFloatingPointValue(keyword);
-                filterField(field, output_field);
+                filterField(field, context, output_field);
             }
         }
 
-        void filterIntegerField(const std::string& keyword, std::vector<int>& output_field)
+        void filterIntegerField(const std::string& keyword,
+                                const ChopContext& context,
+                                std::vector<int>& output_field)
         {
             if (parser_.hasField(keyword)) {
                 const std::vector<int>& field = parser_.getIntegerValue(keyword);
-                filterField(field, output_field);
+                filterField(field, context, output_field);
             }
         }
 
