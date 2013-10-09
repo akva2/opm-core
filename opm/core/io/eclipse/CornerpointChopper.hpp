@@ -133,7 +133,7 @@ namespace Opm
           std::vector<int> new_to_old_cell_;
         } ChopContext;
 
-        void chop(int imin, int imax, int jmin, int jmax, double zmin, double zmax, ChopContext& result, bool resettoorigin=true)
+        void chop(int imin, int imax, int jmin, int jmax, double zmin, double zmax, ChopContext& result, bool resettoorigin=true) const
         {
             result.new_dims_[0] = imax - imin;
             result.new_dims_[1] = jmax - jmin;
@@ -253,7 +253,7 @@ namespace Opm
         /// Return a subparser with fields corresponding to the selected subset.
         /// Note that the returned parser is NOT converted to SI, that must be done
         /// by the user afterwards with the parser's convertToSI() method.
-        EclipseGridParser subparser(const ChopContext& context)
+        EclipseGridParser subparser(const ChopContext& context) const
         {
             if (parser_.hasField("FIELD") || parser_.hasField("LAB") || parser_.hasField("PVT-M")) {
                 OPM_THROW(std::runtime_error, "CornerPointChopper::subparser() cannot handle any eclipse unit system other than METRIC.");
@@ -281,7 +281,7 @@ namespace Opm
 
 
 
-        void writeGrdecl(const std::string& filename, const ChopContext& context)
+        void writeGrdecl(const std::string& filename, const ChopContext& context) const
         {
             // Output new versions of SPECGRID, COORD, ZCORN, ACTNUM, PERMX, PORO, SATNUM.
             std::ofstream out(filename.c_str());
@@ -340,7 +340,7 @@ namespace Opm
         template <typename T>
         void filterField(const std::vector<T>& field,
                          const ChopContext& context,
-                         std::vector<T>& output_field)
+                         std::vector<T>& output_field) const
         {
             int sz = context.new_to_old_cell_.size();
             output_field.resize(sz);
@@ -351,7 +351,7 @@ namespace Opm
 
         void filterDoubleField(const std::string& keyword,
                                const ChopContext& context,
-                               std::vector<double>& output_field)
+                               std::vector<double>& output_field) const
         {
             if (parser_.hasField(keyword)) {
                 const std::vector<double>& field = parser_.getFloatingPointValue(keyword);
@@ -361,7 +361,7 @@ namespace Opm
 
         void filterIntegerField(const std::string& keyword,
                                 const ChopContext& context,
-                                std::vector<int>& output_field)
+                                std::vector<int>& output_field) const
         {
             if (parser_.hasField(keyword)) {
                 const std::vector<int>& field = parser_.getIntegerValue(keyword);
