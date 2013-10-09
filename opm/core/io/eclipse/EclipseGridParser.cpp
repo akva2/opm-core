@@ -172,9 +172,9 @@ namespace {
         std::string us(s);
         // Getting the character type facet for toupper().
         // We use the classic (i.e. C) locale.
-        const std::ctype<char>& ct = std::use_facet< std::ctype<char> >(std::locale::classic());
+        //const std::ctype<char>& ct = std::use_facet< std::ctype<char> >(std::locale::classic());
         for (int i = 0; i < int(s.size()); ++i) {
-            us[i] = ct.toupper(s[i]);
+            us[i] = std::toupper(s[i]);
         }
         return us;
     }
