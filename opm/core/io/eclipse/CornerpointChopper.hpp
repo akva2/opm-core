@@ -316,7 +316,7 @@ namespace Opm
         void outputField(std::ostream& os,
                          const std::vector<T>& field,
                          const std::string& keyword,
-                         const typename std::vector<T>::size_type nl = 20)
+                         const typename std::vector<T>::size_type nl = 20) const
         {
             if (field.empty()) return;
 
