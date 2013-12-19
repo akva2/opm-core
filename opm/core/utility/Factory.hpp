@@ -85,6 +85,8 @@ namespace Opm
         ///                 the class template parameter Base.
         /// \param type the type string with which we want the Factory to associate
         ///             the class Derived.
+        //  \param replace Whether or not we want to replace an existing creator
+        //                 in the factory. Used to avoid races when multithreading.
         template<class Derived>
         static void addCreator(const std::string& type, bool replace=true)
         {
@@ -161,6 +163,8 @@ namespace Opm
         }
 
         // Actually adds the creator.
+        /// \param type The type of the creator to add
+        /// \param replace If true, an already existing creator is replaced
         template<class Derived>
         void doAddCreator(const std::string& type, bool replace)
         {
