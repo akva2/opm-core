@@ -181,6 +181,11 @@ namespace Opm
                       const int,
                       const double,
                       const boost::posix_time::ptime&,
+                      const int num_wells,
+                      const int niwelz,
+                      const int nzwelz,
+                      const int niconz,
+                      const int ncwmax,
                       const std::string&,
                       const std::string&)
     {
