@@ -111,6 +111,8 @@ macro (files_hook)
 endmacro (files_hook)
 
 macro (tests_hook)
+	find_package(ERT COMPONENTS ecl_well REQUIRED)
+	list(APPEND opm-core_LIBRARIES ${ERT_LIBRARY})
 	cond_disable_test ("ERT")
 endmacro (tests_hook)
 

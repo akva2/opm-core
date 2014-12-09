@@ -60,53 +60,68 @@ find_path (ERT_GEN_INCLUDE_DIR
 if (CMAKE_SIZEOF_VOID_P)
   math (EXPR _BITS "8 * ${CMAKE_SIZEOF_VOID_P}")
 endif (CMAKE_SIZEOF_VOID_P)
-find_library (ERT_LIBRARY_ECL
-  NAMES "ecl"
-  HINTS "${ERT_ROOT}"
-  PATHS "${PROJECT_BINARY_DIR}/../ert" "${PROJECT_BINARY_DIR}/../ert-build"
-        "${PROJECT_BINARY_DIR}/../ert/devel"
-  PATH_SUFFIXES "lib" "lib${_BITS}" "lib/${CMAKE_LIBRARY_ARCHITECTURE}"
-  DOC "Path to ERT Eclipse library archive/shared object files"
-  ${_no_default_path}
-  )
-find_library (ERT_LIBRARY_ECL_WELL
-  NAMES "ecl_well"
-  HINTS "${ERT_ROOT}"
-  PATHS "${PROJECT_BINARY_DIR}/../ert" "${PROJECT_BINARY_DIR}/../ert-build"
-        "${PROJECT_BINARY_DIR}/../ert/devel"
-  PATH_SUFFIXES "lib" "lib${_BITS}" "lib/${CMAKE_LIBRARY_ARCHITECTURE}"
-  DOC "Path to ERT Eclipse library archive/shared object files"
-  ${_no_default_path}
-  )
-find_library (ERT_LIBRARY_GEOMETRY
-  NAMES "ert_geometry"
-  HINTS "${ERT_ROOT}"
-  PATHS "${PROJECT_BINARY_DIR}/../ert" "${PROJECT_BINARY_DIR}/../ert-build"
-        "${PROJECT_BINARY_DIR}/../ert/devel"
-  PATH_SUFFIXES "lib" "lib${_BITS}" "lib/${CMAKE_LIBRARY_ARCHITECTURE}"
-  DOC "Path to ERT Geometry library archive/shared object files"
-  ${_no_default_path}
-  )
-find_library (ERT_LIBRARY_UTIL
-  NAMES "ert_util"
-  HINTS "${ERT_ROOT}"
-  PATHS "${PROJECT_BINARY_DIR}/../ert" "${PROJECT_BINARY_DIR}/../ert-build"
-        "${PROJECT_BINARY_DIR}/../ert/devel"
-  PATH_SUFFIXES "lib" "lib${_BITS}" "lib/${CMAKE_LIBRARY_ARCHITECTURE}"
-  DOC "Path to ERT Utilities library archive/shared object files"
-  ${_no_default_path}
-  )
+
+list(FIND ERT_FIND_COMPONENTS "ecl" contains)
+if(NOT ERT_FIND_COMPONENTS OR contains GREATER -1)
+  find_library (ERT_LIBRARY_ECL
+    NAMES "ecl"
+    HINTS "${ERT_ROOT}"
+    PATHS "${PROJECT_BINARY_DIR}/../ert" "${PROJECT_BINARY_DIR}/../ert-build"
+          "${PROJECT_BINARY_DIR}/../ert/devel"
+    PATH_SUFFIXES "lib" "lib${_BITS}" "lib/${CMAKE_LIBRARY_ARCHITECTURE}"
+    DOC "Path to ERT Eclipse library archive/shared object files"
+    ${_no_default_path}
+    )
+  list (APPEND ERT_LIBRARY ${ERT_LIBRARY_ECL})
+endif()
+
+list(FIND ERT_FIND_COMPONENTS "ecl_well" contains)
+if(contains GREATER -1)
+  find_library (ERT_LIBRARY_ECL_WELL
+    NAMES "ecl_well"
+    HINTS "${ERT_ROOT}"
+    PATHS "${PROJECT_BINARY_DIR}/../ert" "${PROJECT_BINARY_DIR}/../ert-build"
+          "${PROJECT_BINARY_DIR}/../ert/devel"
+    PATH_SUFFIXES "lib" "lib${_BITS}" "lib/${CMAKE_LIBRARY_ARCHITECTURE}"
+    DOC "Path to ERT Eclipse library archive/shared object files"
+    ${_no_default_path}
+    )
+  list (APPEND ERT_LIBRARY ${ERT_LIBRARY_ECL_WELL})
+endif()
+
+list(FIND ERT_FIND_COMPONENTS "ert_geometry" contains)
+if(NOT ERT_FIND_COMPONENTS OR contains GREATER -1)
+  find_library (ERT_LIBRARY_GEOMETRY
+    NAMES "ert_geometry"
+    HINTS "${ERT_ROOT}"
+    PATHS "${PROJECT_BINARY_DIR}/../ert" "${PROJECT_BINARY_DIR}/../ert-build"
+          "${PROJECT_BINARY_DIR}/../ert/devel"
+    PATH_SUFFIXES "lib" "lib${_BITS}" "lib/${CMAKE_LIBRARY_ARCHITECTURE}"
+    DOC "Path to ERT Geometry library archive/shared object files"
+    ${_no_default_path}
+    )
+  list(APPEND ERT_LIBRARY ${ERT_LIBRARY_GEOMETRY})
+endif()
+
+list(FIND ERT_FIND_COMPONENTS "ert_util" contains)
+if(NOT ERT_FIND_COMPONENTS OR contains GREATER -1)
+  find_library (ERT_LIBRARY_UTIL
+    NAMES "ert_util"
+    HINTS "${ERT_ROOT}"
+    PATHS "${PROJECT_BINARY_DIR}/../ert" "${PROJECT_BINARY_DIR}/../ert-build"
+          "${PROJECT_BINARY_DIR}/../ert/devel"
+    PATH_SUFFIXES "lib" "lib${_BITS}" "lib/${CMAKE_LIBRARY_ARCHITECTURE}"
+    DOC "Path to ERT Utilities library archive/shared object files"
+    ${_no_default_path}
+    )
+  list(APPEND ERT_LIBRARY ${ERT_LIBRARY_UTIL})
+endif()
+
 # the "library" found here is actually a list of several files
 list (APPEND ERT_INCLUDE_DIR
   ${ERT_ECL_INCLUDE_DIR}
   ${ERT_UTIL_INCLUDE_DIR}
   ${ERT_GEN_INCLUDE_DIR}
-  )
-list (APPEND ERT_LIBRARY
-  ${ERT_LIBRARY_ECL}
-  ${ERT_LIBRARY_ECL_WELL}
-  ${ERT_LIBRARY_GEOMETRY}
-  ${ERT_LIBRARY_UTIL}
   )
 list (APPEND ERT_LIBRARIES ${ERT_LIBRARY})
 list (APPEND ERT_INCLUDE_DIRS ${ERT_INCLUDE_DIR})
@@ -232,9 +247,16 @@ else (NOT (ERT_INCLUDE_DIR MATCHES "-NOTFOUND" OR ERT_LIBRARIES MATCHES "-NOTFOU
   unset (HAVE_ERT CACHE)
 endif (NOT (ERT_INCLUDE_DIR MATCHES "-NOTFOUND" OR ERT_LIBRARIES MATCHES "-NOTFOUND"))
 
+set(ERT_FOUND ${HAVE_ERT})
 # if the test program didn't compile, but was required to do so, bail
 # out now and display an error; otherwise limp on
-find_package_handle_standard_args (ERT
-  DEFAULT_MSG
-  ERT_INCLUDE_DIR ERT_LIBRARY HAVE_ERT
-  )
+find_package_handle_standard_args (ERT DEFAULT_MSG ERT_INCLUDE_DIR ERT_LIBRARY HAVE_ERT)
+
+if(ERT_FIND_COMPONENTS AND NOT ERT_FIND_QUIETLY)
+  message(STATUS "Found the following components")
+  foreach(component ${ERT_FIND_COMPONENTS})
+    message(STATUS "  ${component}")
+  endforeach()
+endif()
+
+mark_as_advanced(ERT_INCLUDE_DIR ERT_LIBRARY HAVE_ERT)
