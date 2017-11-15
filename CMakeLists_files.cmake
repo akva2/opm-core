@@ -29,114 +29,114 @@
 # originally generated with the command:
 # find opm -name '*.c*' -printf '\t%p\n' | sort
 list (APPEND MAIN_SOURCE_FILES
-        opm/core/flowdiagnostics/AnisotropicEikonal.cpp
-        opm/core/flowdiagnostics/DGBasis.cpp
-        opm/core/flowdiagnostics/FlowDiagnostics.cpp
-        opm/core/flowdiagnostics/TofDiscGalReorder.cpp
-        opm/core/flowdiagnostics/TofReorder.cpp
-        opm/core/linalg/LinearSolverFactory.cpp
-        opm/core/linalg/LinearSolverInterface.cpp
-        opm/core/linalg/LinearSolverIstl.cpp
-        opm/core/linalg/LinearSolverPetsc.cpp
-        opm/core/linalg/LinearSolverUmfpack.cpp
-        opm/core/linalg/call_umfpack.c
-        opm/core/linalg/sparse_sys.c
-        opm/core/pressure/CompressibleTpfa.cpp
-        opm/core/pressure/FlowBCManager.cpp
-        opm/core/pressure/IncompTpfa.cpp
-        opm/core/pressure/IncompTpfaSinglePhase.cpp
-        opm/core/pressure/cfsh.c
-        opm/core/pressure/flow_bc.c
-        opm/core/pressure/fsh.c
-        opm/core/pressure/fsh_common_impl.c
-        opm/core/pressure/ifsh.c
-        opm/core/pressure/legacy_well.c
-        opm/core/pressure/mimetic/hybsys.c
-        opm/core/pressure/mimetic/hybsys_global.c
-        opm/core/pressure/mimetic/mimetic.c
-        opm/core/pressure/msmfem/coarse_conn.c
-        opm/core/pressure/msmfem/coarse_sys.c
-        opm/core/pressure/msmfem/dfs.c
-        opm/core/pressure/msmfem/hash_set.c
-        opm/core/pressure/msmfem/ifsh_ms.c
-        opm/core/pressure/msmfem/partition.c
-        opm/core/pressure/tpfa/TransTpfa.cpp
-        opm/core/pressure/tpfa/cfs_tpfa.c
-        opm/core/pressure/tpfa/cfs_tpfa_residual.c
-        opm/core/pressure/tpfa/compr_bc.c
-        opm/core/pressure/tpfa/compr_quant.c
-        opm/core/pressure/tpfa/compr_quant_general.c
-        opm/core/pressure/tpfa/compr_source.c
-        opm/core/pressure/tpfa/ifs_tpfa.c
-        opm/core/pressure/tpfa/trans_tpfa.c
-        opm/core/props/BlackoilPropertiesBasic.cpp
-        opm/core/props/BlackoilPropertiesFromDeck.cpp
-        opm/core/props/IncompPropertiesBasic.cpp
-        opm/core/props/IncompPropertiesFromDeck.cpp
-        opm/core/props/IncompPropertiesSinglePhase.cpp
-        opm/core/props/pvt/PvtPropertiesBasic.cpp
-        opm/core/props/pvt/PvtPropertiesIncompFromDeck.cpp
-        opm/core/props/rock/RockBasic.cpp
-        opm/core/props/rock/RockCompressibility.cpp
-        opm/core/props/rock/RockFromDeck.cpp
-        opm/core/props/satfunc/RelpermDiagnostics.cpp
-        opm/core/props/satfunc/SaturationPropsBasic.cpp
-        opm/core/props/satfunc/SaturationPropsFromDeck.cpp
-        opm/core/simulator/BlackoilState.cpp
-        opm/core/simulator/TwophaseState.cpp
-        opm/core/simulator/SimulatorReport.cpp
-        opm/core/transport/TransportSolverTwophaseInterface.cpp
-        opm/core/transport/implicit/TransportSolverTwophaseImplicit.cpp
-        opm/core/transport/implicit/transport_source.c
-        opm/core/transport/minimal/spu_explicit.c
-        opm/core/transport/minimal/spu_implicit.c
-        opm/core/transport/reorder/ReorderSolverInterface.cpp
-        opm/core/transport/reorder/TransportSolverCompressibleTwophaseReorder.cpp
-        opm/core/transport/reorder/TransportSolverTwophaseReorder.cpp
-        opm/core/transport/reorder/reordersequence.cpp
-        opm/core/transport/reorder/tarjan.c
-        opm/core/utility/Event.cpp
-        opm/core/utility/MonotCubicInterpolator.cpp
-        opm/core/utility/NullStream.cpp
-        opm/core/utility/VelocityInterpolation.cpp
-        opm/core/utility/WachspressCoord.cpp
-        opm/core/utility/compressedToCartesian.cpp
-        opm/core/utility/extractPvtTableIndex.cpp
-        opm/core/utility/miscUtilities.cpp
-        opm/core/utility/miscUtilitiesBlackoil.cpp
-        opm/core/utility/parameters/Parameter.cpp
-        opm/core/utility/parameters/ParameterGroup.cpp
-        opm/core/utility/parameters/ParameterTools.cpp
-        opm/core/wells/InjectionSpecification.cpp
-        opm/core/wells/ProductionSpecification.cpp
-        opm/core/wells/WellCollection.cpp
-        opm/core/wells/WellsGroup.cpp
-        opm/core/wells/WellsManager.cpp
-        opm/core/wells/well_controls.c
-        opm/core/wells/wells.c
+	opm/core/flowdiagnostics/AnisotropicEikonal.cpp # test_anisotropicekonal.cpp, compute_eikonal_from_files
+	opm/core/flowdiagnostics/DGBasis.cpp # test_dgbasis.cpp, compute_tof_from_files.cpp, compute_tof.cpp
+	opm/core/flowdiagnostics/FlowDiagnostics.cpp # test_flowdiagnostics.cpp
+	opm/core/flowdiagnostics/TofDiscGalReorder.cpp # compute_tof.cpp, compute_tof_from_files.cpp
+	opm/core/flowdiagnostics/TofReorder.cpp # compute_tof.cpp, compute_tof_from_files.cpp
+	opm/core/linalg/LinearSolverFactory.cpp # test_parallel_linearsolver.cpp, test_linearsolver.cpp, opm-simulators
+        opm/core/linalg/LinearSolverInterface.cpp # ditto
+        opm/core/linalg/LinearSolverIstl.cpp # ditto
+        opm/core/linalg/LinearSolverPetsc.cpp # ditto
+        opm/core/linalg/LinearSolverUmfpack.cpp # ditto
+				opm/core/linalg/call_umfpack.c # ditto
+				opm/core/linalg/sparse_sys.c # opm-simulators, opm-upscaling/sim_blackoil_impes.cpp, opm-upscaling/sim_co_impes.cpp
+				opm/core/pressure/CompressibleTpfa.cpp # opm-simulators
+				opm/core/pressure/FlowBCManager.cpp # opm-simulators
+				opm/core/pressure/IncompTpfa.cpp # opm-simulators
+				opm/core/pressure/IncompTpfaSinglePhase.cpp # unused
+				opm/core/pressure/cfsh.c # unused
+				opm/core/pressure/flow_bc.c # opm-simulators, opm-upscaling/sim_blackoil_impes.cpp, opm-upscaling/sim_co2_impes.cpp
+				opm/core/pressure/fsh.c # unused
+				opm/core/pressure/fsh_common_impl.c # unused
+				opm/core/pressure/ifsh.c # unused
+				opm/core/pressure/legacy_well.c # unused
+				opm/core/pressure/mimetic/hybsys.c # unused
+				opm/core/pressure/mimetic/hybsys_global.c # unused
+				opm/core/pressure/mimetic/mimetic.c # opm-simulators
+				opm/core/pressure/msmfem/coarse_conn.c # unused
+				opm/core/pressure/msmfem/coarse_sys.c # unused
+				opm/core/pressure/msmfem/dfs.c # test_equil.cpp
+				opm/core/pressure/msmfem/hash_set.c # unused
+				opm/core/pressure/msmfem/ifsh_ms.c # unused
+				opm/core/pressure/msmfem/partition.c # test_equil.cpp
+				opm/core/pressure/tpfa/TransTpfa.cpp # unused
+				opm/core/pressure/tpfa/cfs_tpfa.c # opm-upscaling
+				opm/core/pressure/tpfa/cfs_tpfa_residual.c # opm-simulators
+				opm/core/pressure/tpfa/compr_bc.c # unused
+				opm/core/pressure/tpfa/compr_quant.c # opm-upscaling
+				opm/core/pressure/tpfa/compr_quant_general.c # unused
+				opm/core/pressure/tpfa/compr_source.c # unused
+				opm/core/pressure/tpfa/ifs_tpfa.c # opm-simulators
+				opm/core/pressure/tpfa/trans_tpfa.c # test_pinchprocessor.cpp, opm-upscaling, opm-simulators
+				opm/core/props/BlackoilPropertiesBasic.cpp # test_equil.cpp, opm-simulators
+				opm/core/props/BlackoilPropertiesFromDeck.cpp # test_equil.cpp, test_satfunc.cpp, ewoms, opm-simulators
+				opm/core/props/IncompPropertiesBasic.cpp # tutorial2-4.cpp, test_shadow.cpp, opm-simulators
+				opm/core/props/IncompPropertiesFromDeck.cpp # opm-simulators
+				opm/core/props/IncompPropertiesSinglePhase.cpp # compute_tof.cpp
+				opm/core/props/pvt/PvtPropertiesBasic.cpp # test_equil.cpp, test_shadow.cpp, tutorial2-4.cpp, opm-simulators
+				opm/core/props/pvt/PvtPropertiesIncompFromDeck.cpp # opm-simulators
+				opm/core/props/rock/RockBasic.cpp # test_equil.cpp, test_shadow.cpp, tutorial2-4.cpp, opm-simulators
+				opm/core/props/rock/RockCompressibility.cpp # compute_tof.cpp, tutorial2-4.cpp, opm-simulators, opm-upscaling
+				opm/core/props/rock/RockFromDeck.cpp # test_equil.cpp, test_pinchprocessor.cpp, test_satfunc.cpp, test_wellsprocessor.cpp, test_stoppedwells.cpp ewoms, opm-simulators
+				opm/core/props/satfunc/RelpermDiagnostics.cpp # diagnose_relperm.cpp, test_relpermdiagnostics.cpp, opm-simulators
+				opm/core/props/satfunc/SaturationPropsBasic.cpp # test_equil.cpp, test_shadow.cpp, tutorial2-4.cpp, opm-simulators
+				opm/core/props/satfunc/SaturationPropsFromDeck.cpp # test_equil.cpp, test_satfunc.pp, ewoms, opm-simulators
+				opm/core/simulator/BlackoilState.cpp # test_equil.cpp, test_blackoilstate.cpp, test_stoppedwells.cpp, ewoms, opm-simulators
+				opm/core/simulator/TwophaseState.cpp # tutorial2-4.cpp, opm-simulators
+				opm/core/simulator/SimulatorReport.cpp # opm-simulators
+				opm/core/transport/TransportSolverTwophaseInterface.cpp # tutorial3-4.cpp, opm-simulators
+				opm/core/transport/implicit/TransportSolverTwophaseImplicit.cpp # opm-simulators
+				opm/core/transport/implicit/transport_source.c  # opm-simulators
+				opm/core/transport/minimal/spu_explicit.c # unused
+				opm/core/transport/minimal/spu_implicit.c # unused
+				opm/core/transport/reorder/ReorderSolverInterface.cpp # tutorial3-4.cpp, compute_tof.cpp, compute_tof_from_files.cpp, opm-simulators
+				opm/core/transport/reorder/TransportSolverCompressibleTwophaseReorder.cpp # opm-simulators
+				opm/core/transport/reorder/TransportSolverTwophaseReorder.cpp # tutorial3-4.cpp, opm-simulators
+				opm/core/transport/reorder/reordersequence.cpp # tutorial3-4.cpp, compute_tof.cpp, compute_tof_from_files.cpp, opm-simulators
+				opm/core/transport/reorder/tarjan.c # opm-simulators
+				opm/core/utility/Event.cpp # test_event.cpp, opm-simulators
+				opm/core/utility/MonotCubicInterpolator.cpp # test_cubic.cpp, opm-simulators, opm-upscaling
+				opm/core/utility/NullStream.cpp # opm-simulators
+				opm/core/utility/VelocityInterpolation.cpp # test_velocityinterpolation.cpp
+				opm/core/utility/WachspressCoord.cpp # test_velocityinterpolation.cpp, test_wachspresscoord.cpp
+				opm/core/utility/compressedToCartesian.cpp # compute_initial_state.cpp, compute_tof.cpp, test_equil.cpp, test_relpermdiagnostics.cpp, test_wellsmanager.cpp, ewoms, opm-simulators
+				 opm/core/utility/extractPvtTableIndex.cpp # compute_initial_state.cpp, test_equil.cpp, test_satfunc.cpp, ewoms, opm-simulators
+				 opm/core/utility/miscUtilities.cpp # tutorial3-4.cpp, opm-simulators, opm-upscaling
+				 opm/core/utility/miscUtilitiesBlackoil.cpp # opm-simulators
+        opm/core/utility/parameters/Parameter.cpp # rubbel og bit
+        opm/core/utility/parameters/ParameterGroup.cpp # ditto
+        opm/core/utility/parameters/ParameterTools.cpp # ditto
+				opm/core/wells/InjectionSpecification.cpp # test_stoppedwells.cpp, test_wellcollection.cpp, test_wellsgroup.cpp, test_wellsmanager.cpp, tutorial4.cpp, opm-simulators
+				opm/core/wells/ProductionSpecification.cpp # compute_tof.cpp, test_stoppedwells.cpp, test_wellcollection.cpp, test_wellsgroup.cpp, tutorial4.cpp, opm-simulators
+				opm/core/wells/WellCollection.cpp # compute_tof.cpp, tutorial4.cpp, test_wellsmanager.cpp, test_stoppedwells.cpp, test_wellcollection.cpp, opm-simulators
+				opm/core/wells/WellsGroup.cpp # compute_tof.cpp, tutorial4.cpp, test_stoppedwells.cpp, test_wellcollection.cpp, test_wellsgroup.cpp, test_wellsmanager.cpp, opm-simulators
+				opm/core/wells/WellsManager.cpp # compute_tof.cpp, test_stoppedwells.cpp, test_wellsmanager.cpp, opm-simulators
+				opm/core/wells/well_controls.c # compute_tof.cpp, tutorial2-4.cpp, test_wells.cpp, test_wellcollection.cpp, test_wellgroups.cpp test_wellcontrols.cpp, opm-simulators, opm-upscaling
+				opm/core/wells/wells.c # compute_tof.cpp, tutorial2-4.cpp, test_stoppedwells.cpp, test_wellcollection.cpp, test_wellsgroup.cpp, test_wellsmanager.cpp, opm-simulators
 	)
 
 # originally generated with the command:
 # find tests -name '*.cpp' -a ! -wholename '*/not-unit/*' -printf '\t%p\n' | sort
 list (APPEND TEST_SOURCE_FILES
 	tests/test_compressedpropertyaccess.cpp
-	tests/test_dgbasis.cpp
-	tests/test_cubic.cpp
+		tests/test_dgbasis.cpp
+		tests/test_cubic.cpp
 	tests/test_event.cpp
-	tests/test_flowdiagnostics.cpp
+		tests/test_flowdiagnostics.cpp
 	tests/test_nonuniformtablelinear.cpp
 	tests/test_parallelistlinformation.cpp
 	tests/test_sparsevector.cpp
-       tests/test_velocityinterpolation.cpp
+	tests/test_velocityinterpolation.cpp
 	tests/test_uniformtablelinear.cpp
 	tests/test_wells.cpp
 	tests/test_wachspresscoord.cpp
 	tests/test_linearsolver.cpp
-	tests/test_parallel_linearsolver.cpp
+		tests/test_parallel_linearsolver.cpp
 	tests/test_param.cpp
 	tests/test_satfunc.cpp
 	tests/test_shadow.cpp
-	tests/test_equil.cpp
+	 tests/test_equil.cpp
 	tests/test_regionmapping.cpp
 	tests/test_blackoilstate.cpp
 	tests/test_wellsmanager.cpp
