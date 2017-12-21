@@ -110,8 +110,6 @@ list (APPEND TEST_SOURCE_FILES
 	tests/test_parallel_linearsolver.cpp
 	tests/test_satfunc.cpp
 	tests/test_shadow.cpp
-	tests/test_equil.cpp
-	tests/test_regionmapping.cpp
 	tests/test_blackoilstate.cpp
 	tests/test_wellsmanager.cpp
 	tests/test_wellcontrols.cpp
@@ -128,14 +126,7 @@ list (APPEND TEST_SOURCE_FILES
 # find tests -name '*.param' -a ! -wholename '*/not-unit/*' -printf '\t%p\n' | sort
 list (APPEND TEST_DATA_FILES
 	tests/liveoil.DATA
-	tests/capillary.DATA
-	tests/capillary_overlap.DATA
-        tests/capillarySwatinit.DATA
 	tests/compressed_gridproperty.data
-	tests/deadfluids.DATA
-	tests/equil_livegas.DATA
-	tests/equil_liveoil.DATA
-	tests/equil_rsvd_and_rvvd.DATA
 	tests/wetgas.DATA
 	tests/satfuncStandard.DATA
 	tests/satfuncEPSBase.DATA
@@ -159,7 +150,6 @@ list (APPEND TEST_DATA_FILES
 # find examples -name '*.c*' -printf '\t%p\n' | sort
 list (APPEND EXAMPLE_SOURCE_FILES
 	examples/compute_eikonal_from_files.cpp
-	examples/compute_initial_state.cpp
 	examples/compute_tof.cpp
 	examples/compute_tof_from_files.cpp
 	examples/diagnose_relperm.cpp
@@ -240,15 +230,12 @@ list (APPEND PUBLIC_HEADER_FILES
 	opm/core/props/satfunc/RelpermDiagnostics_impl.hpp
         opm/core/simulator/BlackoilState.hpp
         opm/core/simulator/BlackoilStateToFluidState.hpp
-        opm/core/simulator/EquilibrationHelpers.hpp
         opm/core/simulator/ExplicitArraysFluidState.hpp
         opm/core/simulator/ExplicitArraysSatDerivativesFluidState.hpp
         opm/core/simulator/SimulatorReport.hpp
         opm/core/simulator/TwophaseState.hpp
         opm/core/simulator/WellState.hpp
         opm/core/simulator/initState.hpp
-        opm/core/simulator/initStateEquil.hpp
-        opm/core/simulator/initStateEquil_impl.hpp
         opm/core/simulator/initState_impl.hpp
         opm/core/transport/TransportSolverTwophaseInterface.hpp
         opm/core/transport/implicit/CSRMatrixBlockAssembler.hpp
@@ -271,7 +258,6 @@ list (APPEND PUBLIC_HEADER_FILES
         opm/core/utility/initHydroCarbonState.hpp
         opm/core/utility/MonotCubicInterpolator.hpp
         opm/core/utility/NonuniformTableLinear.hpp
-        opm/core/utility/RegionMapping.hpp
         opm/core/utility/RootFinders.hpp
         opm/core/utility/SparseVector.hpp
         opm/core/utility/UniformTableLinear.hpp

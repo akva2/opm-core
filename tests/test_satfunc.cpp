@@ -17,8 +17,6 @@
 
 /* --- our own headers --- */
 
-#include <opm/core/simulator/initStateEquil.hpp>
-
 #include <opm/core/grid.h>
 #include <opm/core/grid/cart_grid.h>
 #include <opm/core/grid/GridManager.hpp>
